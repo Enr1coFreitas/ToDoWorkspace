@@ -38,6 +38,17 @@
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
         ],
+        "post-install-cmd": [
+            "mkdir -p bootstrap/cache",
+            "chmod -R 775 bootstrap/cache",
+            "mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache storage/logs",
+            "chmod -R 775 storage",
+            "@php artisan cache:clear",
+            "@php artisan config:clear",
+            "@php artisan route:clear",
+            "@php artisan view:clear",
+            "if [ \"$APP_KEY\" == \"\" ]; then php artisan key:generate --force; fi"
+        ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],

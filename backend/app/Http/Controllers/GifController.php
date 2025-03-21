@@ -11,7 +11,7 @@ class GifController extends Controller
 {
     private $apiKey;
     private const CACHE_KEY = 'daily_gif';
-    private const CACHE_DURATION = 86400;
+    private const CACHE_DURATION = 86400; // 24 hours in seconds
 
     public function __construct()
     {
@@ -19,15 +19,14 @@ class GifController extends Controller
     }
 
     /**
+     * Get the daily GIF from cache or fetch a new one
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function getDailyGif()
     {
         try {
-            $diaSemana = strtolower(now()->format('l'));
-            $cacheKey = self::CACHE_KEY . '_' . $diaSemana;
-            
-            $gif = Cache::remember($cacheKey, self::CACHE_DURATION, function () {
+            $gif = Cache::remember(self::CACHE_KEY, self::CACHE_DURATION, function () {
                 return $this->fetchRandomGif();
             });
 
@@ -46,17 +45,16 @@ class GifController extends Controller
     }
 
     /**
+     * Fetch a random GIF from Giphy API
+     *
      * @return array
      * @throws \Exception
      */
     private function fetchRandomGif()
     {
-        $diaSemana = strtolower(now()->format('l'));
-        $response = Http::get('https://api.giphy.com/v1/gifs/search', [
+        $response = Http::get('https://api.giphy.com/v1/gifs/random', [
             'api_key' => $this->apiKey,
-            'rating' => 'g', 
-            'q' => $diaSemana,
-            'limit' => 25
+            'rating' => 'g'
         ]);
 
         if ($response->failed()) {
@@ -65,18 +63,12 @@ class GifController extends Controller
 
         $data = $response->json();
         
-        if (empty($data['data'])) {
-            throw new \Exception('No GIFs found for search term: ' . $diaSemana);
-        }
-        
-        $randomIndex = array_rand($data['data']);
-        $gifData = $data['data'][$randomIndex];
-        
         return [
-            'url' => $gifData['images']['original']['url'],
-            'title' => $gifData['title'],
-            'id' => $gifData['id'],
-            'day' => $diaSemana
+            'url' => $data['data']['images']['original']['url'],
+            'title' => $data['data']['title'],
+            'id' => $data['data']['id'],
+            'fetched_at' => now()->toDateTimeString()
         ];
     }
 }
+
