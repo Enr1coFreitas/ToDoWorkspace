@@ -46,6 +46,13 @@ O projeto está em produção e pode ser acessado diretamente através do Vercel
 - Frontend: [ToDo Workspace](https://to-do-workspace.vercel.app/login)
 - Backend: Hospedado no Heroku
 
+## 🛠️ Ambiente de Desenvolvimento:
+
+O projeto foi desenvolvido utilizando:
+- Linux (Ubuntu)
+- Terminal Warp
+- Docker
+
 ## 🔧 Configuração do Projeto
 
 ### Frontend
