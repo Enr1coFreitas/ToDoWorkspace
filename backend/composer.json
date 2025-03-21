@@ -47,7 +47,7 @@
             "@php artisan config:clear",
             "@php artisan route:clear",
             "@php artisan view:clear",
-            "if [ \"$APP_KEY\" == \"\" ]; then php artisan key:generate --force; fi"
+            "[ -z \"$APP_KEY\" ] && php artisan key:generate --force"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
