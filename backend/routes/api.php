@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\GifController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,12 +29,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/tasks/{id}', [TaskController::class, 'update']);
     Route::delete('/tasks/{id}', [TaskController::class, 'destroy']);
 });
-Route::get('/quote', function () {
-    $quotes = [
-        "O sucesso é a soma de pequenos esforços repetidos dia após dia."
-    ];
-    
-    return response()->json([
-        'quote' => $quotes[array_rand($quotes)]
-    ]);
-});
+Route::get('/quote', [QuoteController::class, 'quote']);
+Route::get('/daily-gif', [GifController::class, 'getDailyGif']);
